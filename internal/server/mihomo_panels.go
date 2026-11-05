@@ -1605,8 +1605,15 @@ func (a *App) writeMihomoConfigMap(cfg map[string]any, sections ...string) error
 	if err != nil {
 		return err
 	}
-	content := string(b)
-	files := map[string]string{mihomoActiveConfigRelPath: content}
+	 content := string(b)
+	 bootstrapValues, err := providerBootstrapValuesFromMihomoConfig(content)
+	 if err != nil {
+	 	return err
+	 }
+	 files := map[string]string{
+	 	mihomoActiveConfigRelPath: content,
+	 	"configs/mosdns/gen/provider_bootstrap.txt": providerBootstrapFileContent(bootstrapValues),
+	 }
 	if rel, ok := a.appliedMihomoUserConfigRel(); ok {
 		if path, pathErr := a.safePath(rel); pathErr == nil {
 			if _, statErr := os.Stat(path); statErr == nil {
@@ -1621,6 +1628,9 @@ func (a *App) writeMihomoConfigMap(cfg map[string]any, sections ...string) error
 	}
 	if a.mihomoConfigMode() != "generated" || !mihomoConfigSectionsDefaultSafe(sections) {
 		a.setMihomoConfigMode("custom")
+	}
+	if err := a.syncMosDNSPluginValues("provider_bootstrap", bootstrapValues); err != nil {
+		return err
 	}
 	return nil
 }
