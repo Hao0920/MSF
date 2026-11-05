@@ -33,7 +33,7 @@ func TestProviderBootstrapValuesFromMihomoConfig(t *testing.T) {
 	if err != nil {
 		t.Fatal(err)
 	}
-	want := []string{"full:sub.example.com"}
+	want := []string{"full:manual.example", "full:sub.example.com"}
 	if !reflect.DeepEqual(got, want) {
 		t.Fatalf("bootstrap values = %#v, want %#v", got, want)
 	}
