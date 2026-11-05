@@ -1434,8 +1434,9 @@ func (a *App) chinaUDPBypassElements(v6 bool) string {
 
 func (a *App) ensureMosDNSRuleFiles() error {
 	files := map[string]string{
-		"configs/mosdns/client_ip.txt":      "",
-		"configs/mosdns/rule/blocklist.txt": "",
+		"configs/mosdns/client_ip.txt":                 "",
+		"configs/mosdns/rule/blocklist.txt":           "",
+		"configs/mosdns/gen/provider_bootstrap.txt":   "",
 	}
 	for rel, content := range files {
 		path := filepath.Join(a.DataDir, rel)
@@ -1447,6 +1448,17 @@ func (a *App) ensureMosDNSRuleFiles() error {
 				return err
 			}
 		}
+	}
+	if effective, _, err := a.mihomoEffectiveConfigContent(); err == nil {
+		values, parseErr := providerBootstrapValuesFromMihomoConfig(effective)
+		if parseErr != nil {
+			return parseErr
+		}
+		if err := a.writeTextFileDirect("configs/mosdns/gen/provider_bootstrap.txt", providerBootstrapFileContent(values)); err != nil {
+			return err
+		}
+	} else if !os.IsNotExist(err) {
+		return err
 	}
 	defaults := defaultMosDNSSwitchStates()
 	for i := 1; i <= 15; i++ {
