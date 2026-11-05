@@ -58,7 +58,7 @@ func (a *App) syncMosDNSPluginValues(tag string, values []string) error {
 
 func mosDNSDomainMapperBackedTag(tag string) bool {
 	switch tag {
-	case "whitelist", "blocklist", "greylist", "ddnslist":
+	case "whitelist", "blocklist", "greylist", "ddnslist", "provider_bootstrap":
 		return true
 	default:
 		return false
