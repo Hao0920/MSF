@@ -47,6 +47,7 @@ func TestMosDNSPersonalRulesHotSyncRuntime(t *testing.T) {
 		{category: "blocklist", tag: "blocklist", pattern: "ads.example"},
 		{category: "greylist", tag: "greylist", pattern: "proxy.example"},
 		{category: "ddnslist", tag: "ddnslist", pattern: "home.example"},
+		{category: "provider_bootstrap", tag: "provider_bootstrap", pattern: "full:sub.example.com"},
 		{category: "direct_ip", tag: "direct_ip", pattern: "192.0.2.0/24"},
 		{category: "redirect", tag: "rewrite", pattern: "full:edge.example 192.0.2.10"},
 	}
@@ -115,7 +116,7 @@ func TestNormalizeMosDNSRulePattern(t *testing.T) {
 }
 
 func TestMosDNSDomainMapperBackedTags(t *testing.T) {
-	for _, tag := range []string{"whitelist", "blocklist", "greylist", "ddnslist"} {
+	for _, tag := range []string{"whitelist", "blocklist", "greylist", "ddnslist", "provider_bootstrap"} {
 		if !mosDNSDomainMapperBackedTag(tag) {
 			t.Errorf("%s should wait for domain_mapper propagation", tag)
 		}
