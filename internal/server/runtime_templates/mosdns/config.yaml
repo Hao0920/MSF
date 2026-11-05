@@ -43,6 +43,10 @@ plugins:
         - "qtype 6 12 65"
         - switch5 'A'
         exec: reject 0
+      - matches:
+        - "qtype 1 28"
+        - "qname $provider_bootstrap"
+        exec: $sequence_local_exit
       - matches:                            #阻止AAAA类型的dns查询
         - "qtype 28"
         - switch6 'A'
@@ -154,6 +158,10 @@ plugins:
         - "qtype 6 12 65"
         - switch5 'A'
         exec: reject 0
+      - matches:
+        - "qtype 1 28"
+        - "qname $provider_bootstrap"
+        exec: $sequence_local_exit
       - matches:                            #阻止AAAA类型的dns查询
         - "qtype 28"
         - switch6 'A'

@@ -115,7 +115,7 @@ func TestNormalizeMosDNSRulePattern(t *testing.T) {
 }
 
 func TestMosDNSDomainMapperBackedTags(t *testing.T) {
-	for _, tag := range []string{"whitelist", "blocklist", "greylist", "ddnslist"} {
+	for _, tag := range []string{"whitelist", "blocklist", "greylist", "ddnslist", "provider_bootstrap"} {
 		if !mosDNSDomainMapperBackedTag(tag) {
 			t.Errorf("%s should wait for domain_mapper propagation", tag)
 		}

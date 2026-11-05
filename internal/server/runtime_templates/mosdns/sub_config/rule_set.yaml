@@ -163,6 +163,13 @@ plugins:
       files:
         - "rule/ddnslist.txt"
 
+#订阅 Provider 引导解析域名
+  - tag: provider_bootstrap
+    type: domain_set_light
+    args:
+      files:
+        - "gen/provider_bootstrap.txt"
+
 #pcdn域名列表
   - tag: pcdnlist
     type: domain_set_light
