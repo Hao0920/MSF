@@ -223,6 +223,18 @@ func (a *App) writeGeneratedConfigs(cfg SetupConfig) error {
 	if manual := renderMihomoManualProviderYAML(cfg.MihomoProxies); strings.TrimSpace(manual) != "" {
 		files["configs/mihomo/proxy_providers/msf_manual.yaml"] = manual
 	}
+	bootstrapConfig := files[mihomoActiveConfigRelPath]
+	if strings.TrimSpace(bootstrapConfig) == "" {
+		bootstrapConfig, _, err = a.mihomoEffectiveConfigContent()
+		if err != nil && !os.IsNotExist(err) {
+			return err
+		}
+	}
+	bootstrapValues, err := providerBootstrapValuesFromMihomoConfig(bootstrapConfig)
+	if err != nil {
+		return err
+	}
+	files["configs/mosdns/gen/provider_bootstrap.txt"] = providerBootstrapFileContent(bootstrapValues)
 	remove := []string{}
 	if isTUNProxyMode(cfg.LinuxProxyMode) {
 		remove = append(remove, "configs/network/network.nft")
