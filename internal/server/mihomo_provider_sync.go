@@ -143,11 +143,19 @@ func (a *App) syncMihomoProxyProvidersYAML(providersYAML, username string, syncS
 			originals[rel] = content
 		}
 	}
+	bootstrapValues, err := providerBootstrapValuesFromMihomoConfig(runtimeContent)
+	if err != nil {
+		return err
+	}
+	files["configs/mosdns/gen/provider_bootstrap.txt"] = providerBootstrapFileContent(bootstrapValues)
 	// Validate every target before changing either the active or applied source.
 	for rel, original := range originals {
 		a.createConfigHistory("mihomo", rel, original, "auto backup before Mihomo proxy providers sync", firstNonEmpty(username, "system"))
 	}
 	if err := a.replaceGeneratedConfigFiles(files, nil); err != nil {
+		return err
+	}
+	if err := a.syncMosDNSPluginValues("provider_bootstrap", bootstrapValues); err != nil {
 		return err
 	}
 	if syncSetup {
